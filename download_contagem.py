@@ -1,3 +1,5 @@
+#!/bin/env python
+
 import requests
 import json
 import time
@@ -56,8 +58,10 @@ def grava_contagem(estado, estrada, id_equipamento, dados):
 
 def baixa_tudo():
     equip = get_equipamentos()
-    equip.sort(key=lambda x: f'{x["uf"]}{x["br"]}{x["km"]}')
-    for e in equip[:2]:
+    equip.sort(
+        key=lambda x: "00" if x["uf"] == "MG" else f'{x["uf"]}{x["br"]}{x["km"]}'
+    )
+    for e in equip:
         id_equipamento = e["idEquipamento"]
         dados = []
         print(f"{e['localizacaoCombo']}")
@@ -72,10 +76,15 @@ def baixa_tudo():
                     assert len(vh) > 0, "Dados diários não podem ser vazios"
                     dados += vh
         grava_contagem(e["uf"], e["br"], id_equipamento, dados)
-        del e["mesesVmdm"]
 
     with open(OUT_DIR + f"equipamentos_contagem.json", "w", encoding="utf8") as f:
-        json.dump(equip, f, indent=2)
+        grava_equipamentos(equip, f)
+
+
+def grava_equipamentos(equip, f):
+    for e in equip:
+        del e["mesesVmdm"]
+    json.dump(equip, f, indent=2)
 
 
 if __name__ == "__main__":
