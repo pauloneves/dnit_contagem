@@ -10,7 +10,10 @@ import requests
 URL_BASE = "http://servicos.dnit.gov.br/dadospnct/api/"
 API_VH = "VolumeHora/{id_equipamento}?ano={ano}&mes={mes}&dia={dia}&_={timestamp}"
 API_EQUIP = "Equipamentos/GetEquipamentos?uf=&_={timestamp}"
-API_DIAS_EQUIP = "Equipamentos/GetDiasEquipamento?idEquipamento={id_equipamento}&ano={ano}&mes={mes}&_={timestamp}"
+API_DIAS_EQUIP = (
+    "Equipamentos/GetDiasEquipamento"
+    "?idEquipamento={id_equipamento}&ano={ano}&mes={mes}&_={timestamp}"
+)
 OUT_DIR = "dados/"
 
 
@@ -71,7 +74,7 @@ def baixa_tudo():
     )
     for e in equip:
         id_equipamento = e["idEquipamento"]
-        if pathlib.Path(nome_output(e["uf"], e["br"], id_equipamento)).exists():
+        if ja_processado(e):
             continue
         dados = []
         print(f"\n{e['localizacaoCombo']}")
@@ -90,8 +93,12 @@ def baixa_tudo():
                     dados += vh
         grava_contagem(e["uf"], e["br"], id_equipamento, dados)
 
-    with open(OUT_DIR + f"equipamentos_contagem.json", "w", encoding="utf8") as f:
+    with open(OUT_DIR + "equipamentos_contagem.json", "w", encoding="utf8") as f:
         grava_equipamentos(equip, f)
+
+
+def ja_processado(e):
+    return pathlib.Path(nome_output(e["uf"], e["br"], e["idEquipamento"])).exists()
 
 
 def grava_equipamentos(equip, f):
