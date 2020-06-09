@@ -1,9 +1,11 @@
 #!/bin/env python
 
-import requests
 import json
-import time
+import pathlib
 import sys
+import time
+
+import requests
 
 URL_BASE = "http://servicos.dnit.gov.br/dadospnct/api/"
 API_VH = "VolumeHora/{id_equipamento}?ano={ano}&mes={mes}&dia={dia}&_={timestamp}"
@@ -53,16 +55,12 @@ def get_dias(id_equipamento, ano, mes):
     return baixa(url)
 
 
-def get_equipamento():
-    pass
+def nome_output(estado, estrada, id_equipamento):
+    return OUT_DIR + f"{estado}_{estrada}_{id_equipamento}_contagem.json"
 
 
 def grava_contagem(estado, estrada, id_equipamento, dados):
-    with open(
-        OUT_DIR + f"{estado}_{estrada}_{id_equipamento}_contagem.json",
-        "w",
-        encoding="utf8",
-    ) as f:
+    with open(nome_output, "w", encoding="utf8",) as f:
         json.dump(dados, f, indent=2)
 
 
@@ -73,6 +71,8 @@ def baixa_tudo():
     )
     for e in equip:
         id_equipamento = e["idEquipamento"]
+        if pathlib.Path(nome_output(e["uf"], e["br"], id_equipamento)).exists():
+            continue
         dados = []
         print(f"\n{e['localizacaoCombo']}")
         for ano_meses in e["mesesVmdm"]:
