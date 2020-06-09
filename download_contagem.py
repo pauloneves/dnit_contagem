@@ -3,6 +3,7 @@
 import requests
 import json
 import time
+import sys
 
 URL_BASE = "http://servicos.dnit.gov.br/dadospnct/api/"
 API_VH = "VolumeHora/{id_equipamento}?ano={ano}&mes={mes}&dia={dia}&_={timestamp}"
@@ -16,7 +17,16 @@ def atimestamp():
 
 
 def baixa(url):
-    response = requests.get(url)
+    timeout_secs = 5
+    while timeout_secs:
+        try:
+            response = requests.get(url, timeout=timeout_secs)
+            timeout_secs = None
+        except requests.Timeout:
+            print("**** Deu timeout: ", url)
+            time.sleep(timeout_secs * 10)
+            timeout_secs *= 2
+
     assert (
         response.ok and response.json()["sucesso"]
     ), f"request não foi bem sucedida. Status: {response.status_code} e {response.json()['sucesso']}"
@@ -64,14 +74,17 @@ def baixa_tudo():
     for e in equip:
         id_equipamento = e["idEquipamento"]
         dados = []
-        print(f"{e['localizacaoCombo']}")
+        print(f"\n{e['localizacaoCombo']}")
         for ano_meses in e["mesesVmdm"]:
             ano = ano_meses["ano"]
             meses = ano_meses["meses"]
             for mes in meses:
                 # print(f"\t{ano}-{mes:02d}")
+                print(f"\n\t{ano}-{mes:02d}: ", end="")
+
                 for dia in get_dias(id_equipamento, ano, mes):
-                    print(f"\t{ano}-{mes:02d}-{dia:02d}")
+                    print(f"{dia:02d}", end=",")
+                    sys.stdout.flush()
                     vh = get_vh(id_equipamento, ano, mes, dia)
                     assert len(vh) > 0, "Dados diários não podem ser vazios"
                     dados += vh
