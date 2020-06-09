@@ -4,5 +4,8 @@
         "titleBar.activeBackground": "#014A36",
         "titleBar.activeForeground": "#E8FFF8"
     },
-    "python.pythonPath": "C:\\Anaconda3\\envs\\rodovias\\python.exe"
+    "python.pythonPath": "C:\\Anaconda3\\envs\\rodovias\\python.exe",
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.formatting.provider": "black"
 }
