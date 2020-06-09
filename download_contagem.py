@@ -27,7 +27,7 @@ def baixa(url):
         try:
             response = requests.get(url, timeout=timeout_secs)
             timeout_secs = None
-        except requests.Timeout:
+        except requests.RequestException:
             print("**** Deu timeout: ", url)
             time.sleep(timeout_secs * 10)
             timeout_secs *= 2
