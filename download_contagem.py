@@ -14,7 +14,7 @@ API_DIAS_EQUIP = (
     "Equipamentos/GetDiasEquipamento"
     "?idEquipamento={id_equipamento}&ano={ano}&mes={mes}&_={timestamp}"
 )
-OUT_DIR = "dados/"
+OUT_DIR = "dados/contagem/"
 
 
 def atimestamp():
@@ -63,7 +63,7 @@ def nome_output(estado, estrada, id_equipamento):
 
 
 def grava_contagem(estado, estrada, id_equipamento, dados):
-    with open(nome_output, "w", encoding="utf8",) as f:
+    with open(nome_output(estado, estrada, id_equipamento), "w", encoding="utf8",) as f:
         json.dump(dados, f, indent=2)
 
 

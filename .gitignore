@@ -1,3 +1,5 @@
 dados
 *.pyc
 .vscode/.ropeproject/objectdb
+_map.html
+.ipynb_checkpoints/
