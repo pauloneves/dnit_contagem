@@ -18,7 +18,7 @@ Os metadados são autoexplicativos pelo nome dos cabeçalhos. Abaixo detalho o q
 - C) Crescente na kilometragem da via
 - D) Decrescente na km da via
 
-# Classe de veículos e sua descrição
+### Classe de veículos e sua descrição
 	
 - A) Ônibus/Cam de 2 eixos
 - B) Ônibus/Cam de 3 eixos
@@ -32,6 +32,6 @@ Os metadados são autoexplicativos pelo nome dos cabeçalhos. Abaixo detalho o q
 - J) Moto
 - L) Outros
 
-# Equipamentos (`equipamentos_contagem.json`)
+## Equipamentos (`equipamentos_contagem.json`)
 
 - duplo indica se é pista dupla ou simples
